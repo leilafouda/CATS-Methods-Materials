@@ -28,20 +28,19 @@ clear all; close all;
 cf = pwd;
 [filename,fileloc]=uigetfile('*.mat', 'select the *.mat file with the Acc/Gyro positions');
 cd(fileloc);
-[benchfile,benchloc] = uigetfile({'*.xlsx;*.xls','Excel files (*.xlsx, *.xls)'; '*.*','All Files'}, 'select xls/xlsx file with calibration start times');
-%[benchfile,benchloc] = uigetfile('*.xl*','select xls file with calibration start times');
+[benchfile,benchloc] = uigetfile('*.xls*','select xls file with calibration start times');
 cd(cf);
 
 data =  load([fileloc filename]); data = data.data;
 [benchdata, txtdata,alldata] = xlsread([benchloc benchfile]);
-%if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
+if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
 %
 tagtype = txtdata{3,2}
 tagnum = alldata{2,2}
 if isnumeric(tagnum); tagnum = num2str(tagnum); end
-starts = benchdata(16:3:33,2);
-positions = benchdata(16:3:33,1);
-stops = benchdata(16:3:33,3);
+starts = benchdata(13:3:30,2);
+positions = benchdata(13:3:30,1);
+stops = benchdata(13:3:30,3);
 A = nan(size(positions,1),3); n = 1;
 times = data.Time;
 fs = round(10/(median(diff(times*24*60*60))))/10 % sampling rate to the nearest tenth of a second, then converted to Hz
@@ -120,8 +119,7 @@ if ~(strcmpi(tagtype,'acousonde') || contains(tagtype,'LL') || (length(tagtype)>
     cf = pwd; if ischar(fileloc); cd(fileloc); end
     [filename2,fileloc2]=uigetfile('*.mat', 'select mat file with gyro calibrations','multiselect','on');
     cd(fileloc2);
-    [benchfile2,benchloc2] = uigetfile({'*.xlsx;*.xls','Excel files (*.xlsx, *.xls)'; '*.*','All Files'}, 'select xls/xlsx file with calibration start times');
-    %[benchfile2,benchloc2] = uigetfile('*.xls*','select xls file with calibration start times','multiselect','on');
+    [benchfile2,benchloc2] = uigetfile('*.xls*','select xls file with calibration start times','multiselect','on');
     cd(cf);
     %
     if ~strcmp(filename2,filename); filename = filename2; fileloc = fileloc2;
@@ -129,12 +127,13 @@ if ~(strcmpi(tagtype,'acousonde') || contains(tagtype,'LL') || (length(tagtype)>
     end
     if ~strcmp(benchfile2,benchfile); benchfile = benchfile2; benchloc = benchloc2;
         [benchdata, txtdata,alldata] = xlsread([benchloc benchfile]);
-       % if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
+        if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
     end
-        starts = benchdata(14:31,2); %13:30 are the row numbers in the excel file
-        positions = benchdata(14:31,1);
-        stops = benchdata(14:31,3);
-        rpms =benchdata(14:31,4);
+
+        starts = benchdata(13:30,2); %13:30 are the row numbers in the excel file
+        positions = benchdata(13:30,1);
+        stops = benchdata(13:30,3);
+        rpms =benchdata(13:30,4);
 else gyconst = nan(1,3); gycal = nan(3,3);
 end
 
@@ -348,8 +347,7 @@ disp('Step 2 successfully completed')
 cf = pwd; if ischar(fileloc); cd(fileloc); end
 [filename2,fileloc2]=uigetfile('*.mat', 'select magnetometer data file');
 cd(fileloc2);
-[benchfile2,benchloc2] = uigetfile({'*.xlsx;*.xls','Excel files (*.xlsx, *.xls)'; '*.*','All Files'}, 'select xls/xlsx file with calibration start times');
-%[benchfile2,benchloc2] = uigetfile('*.xls*','select xls file with calibration start times');
+[benchfile2,benchloc2] = uigetfile('*.xls*','select xls file with calibration start times');
 cd(cf);
 %
     if ~strcmp(filename2,filename); filename = filename2; fileloc = fileloc2;
@@ -357,13 +355,13 @@ cd(cf);
     end
     if ~strcmp(benchfile2,benchfile); benchfile = benchfile2; benchloc = benchloc2;
        [benchdata, txtdata,alldata] = xlsread([benchloc benchfile]);
-       % if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
+        if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
     end
 %
 
-    starts = benchdata(18:19,8);
+    starts = benchdata(17:18,8);
     %     positions = benchdata(~isnan(benchdata(:,13)),12);
-    stops = benchdata(18:19,9);
+    stops = benchdata(17:18,9);
     cameras = txtdata(18:19,7);
   times = data.Time;
   if isnan(starts(2)); starts(2) = starts(1); stops(2) = stops(1); 
