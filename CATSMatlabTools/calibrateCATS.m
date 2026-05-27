@@ -39,9 +39,9 @@ data =  load([fileloc filename]); data = data.data;
 tagtype = txtdata{3,2}
 tagnum = alldata{2,2}
 if isnumeric(tagnum); tagnum = num2str(tagnum); end
-starts = benchdata(16:3:33,2);
-positions = benchdata(16:3:33,1);
-stops = benchdata(16:3:33,3);
+starts = benchdata(13:3:30,2);
+positions = benchdata(13:3:30,1);
+stops = benchdata(13:3:30,3);
 A = nan(size(positions,1),3); n = 1;
 times = data.Time;
 fs = round(10/(median(diff(times*24*60*60))))/10 % sampling rate to the nearest tenth of a second, then converted to Hz
@@ -131,10 +131,10 @@ if ~(strcmpi(tagtype,'acousonde') || contains(tagtype,'LL') || (length(tagtype)>
         [benchdata, txtdata,alldata] = xlsread([benchloc benchfile]);
        % if ~isnumeric(alldata{2,2}); benchdata = [nan(2,size(benchdata,2)); benchdata]; end
     end
-        starts = benchdata(14:31,2); %13:30 are the row numbers in the excel file
-        positions = benchdata(14:31,1);
-        stops = benchdata(14:31,3);
-        rpms =benchdata(14:31,4);
+        starts = benchdata(13:30,2); %13:30 are the row numbers in the excel file
+        positions = benchdata(13:30,1);
+        stops = benchdata(13:30,3);
+        rpms =benchdata(13:30,4);
 else gyconst = nan(1,3); gycal = nan(3,3);
 end
 
@@ -361,10 +361,10 @@ cd(cf);
     end
 %
 
-    starts = benchdata(18:19,8);
+    starts = benchdata(17:18,8);
     %     positions = benchdata(~isnan(benchdata(:,13)),12);
-    stops = benchdata(18:19,9);
-    cameras = txtdata(18:19,7);
+    stops = benchdata(17:18,9);
+    cameras = txtdata(17:18,7);
   times = data.Time;
   if isnan(starts(2)); starts(2) = starts(1); stops(2) = stops(1); 
   warning('No Camera on magnetometer calibration noted, using the same data as for camera off'); end
